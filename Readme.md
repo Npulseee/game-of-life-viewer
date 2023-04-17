@@ -70,7 +70,7 @@ https://conwaylife.com/wiki/Spacefiller
 
 - Draw your own start configuration 
 
-    ![Heart](/assets/Screenshot 2023-04-15 003255.jpg)
+    ![Heart](https://github.com/Npulseee/GameOfLife/blob/master/assets/Screenshot%202023-04-15%20003255.jpg?raw=true)
     
     ```java
     public class HelloController {
