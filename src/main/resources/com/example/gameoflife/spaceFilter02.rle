@@ -1,0 +1,34 @@
+x = 141, y = 127, rule = B3/S23
+46bo$37bo9b2o62bo6bo$35bobo8b2o63bobo3bo$24bo11b2o63bo9b2o4b3o$25bo3b
+o71bobo$23b3o4b2o69b2o$29b2o$38bo5bo4bo60bo$39b2o4b2o3b2o56b2o18bo$38b
+2o4b2o3b2o58b2o15b2o$26bo6bo81bo11b2o$27bo6bo79bo$25b3o4b3o79b3o6bo$121b
+2o$37bobo69bobo10b2o$38b2o69b2o$38bo71bo$14bo$15bo2bo$13b3o3b2o2bobo5b
+o85bo4bobo$18b2o4b2o3bobo85bobo2b2o$24bo5b2o85b2o4bo$127bobo$127b2o8b
+obo$23bo104bo3bobo2b2o$17bo3bobo108b2o4bo$18b2o2b2o109bo$17b2o$14bo$12b
+obo$13b2o6$67bo13bo$54b2o10bobo11bobo10b2o43bo$54bo12bo13bo12bo43bobo
+$55b3o10b3ob2ob2ob3o10b3o44b2o$57bo12bobo3bobo12bo$73bobo$71b3ob3o$61b
+o8bo7bo8bo$5bo5bo48bobo6bobo5bobo6bobo$6b2obobo48b2o8b2o5b2o8b2o$5b2o
+3b2o52b2o8bo8b2o14bo$50b3o11bobo3b9o3bobo13bobo$65bobobo9bobobo14b2o$
+60b2o5bob11obo5b2o$59bo2bo4bo13bo4bo2bo$7bobo42b2o5bobo6b13o6bobo6b2o
+2b2o$8b2o41bobo6bo3b2o17b2o3bo7b2o2bo$8bo41bobo3b2o5bob19obo6b2o9bo$49b
+obo3bo2bo4bo21bo6b2o8b2o$49b2o4bobo6b21o13b2o$56bo3b2o25bo10bobo$52b2o
+5bob29o5b2obobo$46b2o3bo2bo4bo30bo3bo2bobo$42bo2bo2bo2bobo6b31o4bo2bo
+$41bobo2b2o4bo3b2o33b2o3b2o$42bo12bob31o2bo2bo$55bo31bo3bobo$46b2ob2o
+5b29o5b2ob2o$47bobo3bo31bo$47bo2bo2b31obo12bo$43b2o3b2o33b2o3bo4b2o2b
+obo$42bo2bo4b31o6bobo2bo2bo2bo$41bobo2bo3bo30bo4bo2bo3b2o$40bobob2o5b
+29obo5b2o$40bobo10bo25b2o3bo$41b2o13b21o6bobo4b2o$37b2o8b2o6bo21bo4bo
+2bo3bobo$37bo9b2o6bob19obo5b2o3bobo41bo$40bo2b2o7bo3b2o17b2o3bo6bobo41b
+2o$39b2o2b2o6bobo6b13o6bobo5b2o42bobo$51bo2bo4bo13bo4bo2bo$52b2o5bob11o
+bo5b2o$41b2o14bobobo9bobobo$40bobo13bobo3b9o3bobo11b3o$41bo14b2o8bo8b
+2o52b2o3b2o$52b2o8b2o5b2o8b2o48bobob2o$52bobo6bobo5bobo6bobo48bo5bo$53b
+o8bo7bo8bo$63b3ob3o$65bobo$49bo12bobo3bobo12bo$b2o44b3o10b3ob2ob2ob3o
+10b3o$obo43bo12bo13bo12bo$2bo43b2o10bobo11bobo10b2o$59bo13bo6$126b2o$
+126bobo$126bo$122b2o$7bo109b2o2b2o$2bo4b2o108bobo3bo$2b2o2bobo3bo104b
+o$bobo8b2o$11bobo$17bo4b2o85b2o5bo$17b2o2bobo85bobo3b2o4b2o$16bobo4bo
+85bo5bobo2b2o3b3o$122bo2bo$126bo$30bo71bo$30b2o69b2o$17b2o10bobo69bob
+o$18b2o$17bo6b3o79b3o4b3o$26bo79bo6bo$12b2o11bo81bo6bo$13b2o15b2o58b2o
+3b2o4b2o$12bo18b2o56b2o3b2o4b2o$30bo60bo4bo5bo$110b2o$38b2o69b2o4b3o$
+37bobo71bo3bo$21b3o4b2o9bo63b2o11bo$23bo3bobo63b2o8bobo$22bo6bo62b2o9b
+o$94bo!
+#C [[ THUMBSIZE 2 THEME 6 GRID GRIDMAJOR 0 SUPPRESS THUMBLAUNCH ]]
+#C [[ THUMBSIZE 2 ZOOM 4 WIDTH 800 HEIGHT 800 GPS 24 ]]
