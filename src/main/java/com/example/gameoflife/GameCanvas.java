@@ -7,9 +7,9 @@ import javafx.scene.layout.Pane;
 
 public class GameCanvas extends Canvas {
 
-    private float cubeSize;
+    private double cubeSize;
     private Grid game;
-    private int totalX, totalY;
+    private double totalX, totalY;
     private int offsetX, offsetY;
 
 
@@ -17,20 +17,20 @@ public class GameCanvas extends Canvas {
         int[][] grid = game.getValues();
         GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, getWidth(), getHeight());
-        int countX = (int) (getWidth() / cubeSize);
-        int countY = (int) (getHeight() / cubeSize);
-        int starX = totalX + offsetX;
-        int starY = totalY + offsetY;
-        for (int x = starX; x < starX + countX; x++) {
-            for (int y = starY; y < starY + countY; y++) {
+        int cubeCountX = Math.min((int) (getWidth() / cubeSize), grid.length);
+        int cubeCountY = Math.min((int) (getHeight() / cubeSize), grid[0].length);
+        double startX = (getWidth() - cubeCountX * cubeSize) / 2;
+        double startY = (getHeight() - cubeCountY * cubeSize) / 2;
+        for (int x = 0; x < cubeCountX; x++) {
+            for (int y = 0; y < cubeCountY; y++) {
                 try {
-                    if (Math.abs(x) >= grid.length || Math.abs(y) >= grid[0].length || Math.abs(x) < 0 || Math.abs(y) < 0) {
+                    if (x >= grid.length || y >= grid[0].length || x < 0 || y < 0) {
                         continue;
                     }
-                    if (grid[Math.abs(x)][Math.abs(y)] == 0) {
-                        gc.strokeRect((x - starX) * cubeSize, (y - starY) * cubeSize, cubeSize, cubeSize);//draws the empty cubes
+                    if (grid[x][y] == 0) {
+                        gc.strokeRect(startX + x * cubeSize, startY + y * cubeSize, cubeSize, cubeSize);//draws the empty cubes
                     } else {
-                        gc.fillRect((x - starX) * cubeSize, (y - starY) * cubeSize, cubeSize, cubeSize);//draws the black cubes
+                        gc.fillRect(startX + x * cubeSize, startY + y * cubeSize, cubeSize, cubeSize);//draws the black cubes
                     }
                 } catch (IndexOutOfBoundsException e) {
                     e.printStackTrace();
@@ -50,7 +50,7 @@ public class GameCanvas extends Canvas {
         this.cubeSize = cubeSize;
     }
 
-    public float getCubeSize() {
+    public double getCubeSize() {
         return cubeSize;
     }
 
@@ -62,7 +62,7 @@ public class GameCanvas extends Canvas {
     }
 
     public void updateCanvasPosition() {
-        totalX = -(game.getValues().length / 2 + (int) (getWidth() / cubeSize) / 2);
+        totalX = -game.getValues()[0].length / 2.0;
         totalY = -(game.getValues()[0].length / 2 + (int) (getHeight() / cubeSize) / 2);
     }
 

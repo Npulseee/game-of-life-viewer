@@ -16,9 +16,16 @@ public class Grid {
 
 
     public void loadConfigurationCentered(int[][] config) {
-        values = new int[width][height];
         int sizeX = config.length;
         int sizeY = config[0].length;
+
+        // increase grid dimensions if the new pattern is larger
+        if (width < sizeX || height < sizeY) {
+            width = sizeX;
+            height = sizeY;
+        }
+
+        values = new int[width][height];
         int startX = width / 2 - sizeX / 2;
         int startY = height / 2 - sizeY / 2;
         for (int x = 0; x < sizeX; x++) {
@@ -45,13 +52,6 @@ public class Grid {
 
     public void clear() {
         values = new int[width][height];
-    }
-
-
-    public void setValues(int[][] canvas) {
-        this.values = canvas;
-        width = canvas.length;
-        height = canvas[0].length;
     }
 
 
