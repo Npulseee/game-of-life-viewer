@@ -1,45 +1,49 @@
 package com.example.gameoflife;
 
+import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Pane;
 
-public class GameGrid extends Canvas {
+public class GameCanvas extends Canvas {
+
     private float cubeSize;
-    private GameOfLife game;
+    private Grid game;
     private int totalX, totalY;
     private int offsetX, offsetY;
 
-    public void drawGrid(){
-        int[][] grid = game.getGrid();
+
+    public void drawGrid() {
+        int[][] grid = game.getValues();
         GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, getWidth(), getHeight());
         int countX = (int) (getWidth() / cubeSize);
         int countY = (int) (getHeight() / cubeSize);
         int starX = totalX + offsetX;
         int starY = totalY + offsetY;
-        for(int x = starX; x < starX + countX; x++) {
-            for (int y = starY; y <starY + countY; y++) {
+        for (int x = starX; x < starX + countX; x++) {
+            for (int y = starY; y < starY + countY; y++) {
                 try {
                     if (Math.abs(x) >= grid.length || Math.abs(y) >= grid[0].length || Math.abs(x) < 0 || Math.abs(y) < 0) {
                         continue;
                     }
-                    if(grid[Math.abs(x)][Math.abs(y)] == 0) {
-                        gc.strokeRect((x- starX) * cubeSize, (y - starY) * cubeSize, cubeSize, cubeSize);//draws the empty cubes
+                    if (grid[Math.abs(x)][Math.abs(y)] == 0) {
+                        gc.strokeRect((x - starX) * cubeSize, (y - starY) * cubeSize, cubeSize, cubeSize);//draws the empty cubes
                     } else {
-                        gc.fillRect((x- starX) * cubeSize, (y - starY) * cubeSize, cubeSize, cubeSize);//draws the black cubes
+                        gc.fillRect((x - starX) * cubeSize, (y - starY) * cubeSize, cubeSize, cubeSize);//draws the black cubes
                     }
                 } catch (IndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
 
             }
-        }
+        };
     }
 
-    public void setGame(GameOfLife game) {
+
+    public void setGame(Grid game) {
         this.game = game;
-        totalX = -(game.getGrid().length / 2 + (int) (getWidth() / cubeSize) / 2);
-        totalY = -(game.getGrid()[0].length / 2 + (int) (getHeight() / cubeSize) / 2);
+        updateCanvasPosition();
     }
 
     public void setCubeSize(float cubeSize) {
@@ -55,6 +59,11 @@ public class GameGrid extends Canvas {
         totalY += offsetY;
         offsetX = 0;
         offsetY = 0;
+    }
+
+    public void updateCanvasPosition() {
+        totalX = -(game.getValues().length / 2 + (int) (getWidth() / cubeSize) / 2);
+        totalY = -(game.getValues()[0].length / 2 + (int) (getHeight() / cubeSize) / 2);
     }
 
     public void addToOffsetX(int add) {

@@ -4,25 +4,26 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class HelloApplication extends Application {
+import java.util.Objects;
+
+public class GameOfLifeEditor extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("hello-view.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("hello-view.fxml")));
 
         Scene scene = new Scene(root);
-        stage.setTitle("Game Of Life");//title of the window
+        stage.setTitle("Game Of Life Editor");
         stage.setScene(scene);
-        stage.setResizable(false);//makes the windows not resizeable
+        stage.setResizable(true);
+        stage.setMinWidth(500);
+        stage.setMinHeight(500);
         stage.show();
     }
 
     public static void main(String[] args) {
         launch(args);
-        System.out.println();
     }
 }
