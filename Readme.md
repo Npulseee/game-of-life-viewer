@@ -1,5 +1,5 @@
 
-# Conway's Game Of Life Viewer
+# Conway's Game of Life Viewer
 <p align="center">
   <img src="https://github.com/Npulseee/game-of-life-viewer/blob/master/assets/screenshot.png" width="90%">
 </p>
