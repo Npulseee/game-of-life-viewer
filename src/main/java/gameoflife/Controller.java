@@ -20,22 +20,19 @@ public class Controller {
     private GameCanvas gameCanvas;
     @FXML
     private Button modeButton;
+    @FXML
+    private Button playButton;
 
     private GUIMode mode = GUIMode.VIEW;
     private AnimationTimer timer;
     private GameGrid gameGrid;
-    private int canvasSizeX;
-    private int canvasSizeY;
-    private int lastX, lastY;
-    private int startX, startY;
     private Configuration savedConfiguration;
-
+    private double lastX, lastY;
     private boolean isPaused = true;
 
+
     public void initialize() {
-        canvasSizeX = 100;
-        canvasSizeY = 100;
-        gameGrid = new GameGrid(canvasSizeX, canvasSizeY);
+        gameGrid = new GameGrid(1000, 1000);
 
         Pane parent = (Pane) gameCanvas.getParent();
         gameCanvas.widthProperty().bind(parent.widthProperty());
@@ -51,7 +48,8 @@ public class Controller {
 
     @FXML
     void onButtonRun() {
-        isPaused = false;
+        isPaused = !isPaused;
+        playButton.setText(isPaused ? "▶" :"⏸");
     }
 
     @FXML
@@ -74,7 +72,7 @@ public class Controller {
             Configuration res = RLE_Reader.importConfigurationFromFile(file.getName());
             gameGrid.loadConfigurationCentered(res);
             savedConfiguration = gameGrid.getCurrentConfiguration();
-            gameCanvas.updateCanvasPosition();
+            gameCanvas.setGame(gameGrid);
         }
     }
 
@@ -83,10 +81,6 @@ public class Controller {
         savedConfiguration = gameGrid.getCurrentConfiguration();
     }
 
-    @FXML
-    void onButtonPause() {
-        isPaused = true;
-    }
 
     @FXML
     void onButtonMode() {
@@ -119,42 +113,28 @@ public class Controller {
 
         gameCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent event) -> {
             if (mode == GUIMode.VIEW) {
-                startX = (int) (event.getSceneX() / gameCanvas.getCubeSize());
-                startY = (int) (event.getSceneY() / gameCanvas.getCubeSize());
+                lastX = event.getSceneX();
+                lastY = event.getSceneY();
             }
         });
-        gameCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            if (mode == GUIMode.VIEW) {
-                gameCanvas.setTotals();
-            }
-        });
-        gameCanvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, (MouseEvent event) -> {
-            int x = (int) (event.getSceneX() / gameCanvas.getCubeSize());
-            int y = (int) (event.getSceneY() / gameCanvas.getCubeSize());
-            if ((lastX != x || lastY != y) && x >= 0 && x < canvasSizeX - 1 && y >= 0 && y < canvasSizeY - 1) {
-                if (mode == GUIMode.EDIT) {
-                    lastX = x;
-                    lastY = y;
-                    gameGrid.setCell(x, y, event.isPrimaryButtonDown());
-                } else {
-                    gameCanvas.addToOffsetX(startX - x);
-                    gameCanvas.addToOffsetY(startY - y);
-                }
-            }
 
+        gameCanvas.addEventHandler(MouseEvent.MOUSE_DRAGGED, (MouseEvent event) -> {
+            if (mode == GUIMode.EDIT) {
+                gameCanvas.drawOverPosition(event.getSceneX(), event.getSceneY(), event.isPrimaryButtonDown());
+            } else {
+                double deltaX = lastX - event.getSceneX();
+                double deltaY = lastY - event.getSceneY();
+                gameCanvas.addDragOffset(deltaX, deltaY);
+                lastX = event.getSceneX();
+                lastY = event.getSceneY();
+            }
         });
         gameCanvas.addEventHandler(ScrollEvent.SCROLL, (ScrollEvent event) -> {     //5, 10, 15, 20, 25, 30, 35, 40, 45, 50
-            final int MIN_CUBE_SIZE = 1;
-            final int MAX_CUBE_SIZE = 50;
-            System.out.print(gameCanvas.getCubeSize() + "-> ");
-            if ((gameCanvas.getCubeSize() / 3.0) * 2 >= MIN_CUBE_SIZE && event.getDeltaY() < 0 || gameCanvas.getCubeSize() * 1.5 <= MAX_CUBE_SIZE && event.getDeltaY() > 0) {
-                int x = (int) (event.getSceneX() / gameCanvas.getCubeSize());
-                int y = (int) (event.getSceneY() / gameCanvas.getCubeSize());
-                gameCanvas.setCubeSize((float) (event.getDeltaY() < 0 ? (gameCanvas.getCubeSize() / 11.7) * 10 : gameCanvas.getCubeSize() * 1.17));
-                canvasSizeX = (int) (gameCanvas.getWidth() / gameCanvas.getCubeSize());
-                canvasSizeY = (int) (gameCanvas.getHeight() / gameCanvas.getCubeSize());
-                System.out.println(gameCanvas.getCubeSize());
-            }
+            final double MIN_CUBE_SIZE = 4;
+            final double MAX_CUBE_SIZE = 30;
+            final double STEP = 2;
+            double newSize = event.getDeltaY() < 0 ? gameCanvas.getCubeSize() - STEP : gameCanvas.getCubeSize() + STEP;
+            gameCanvas.setCubeSize(Math.clamp(newSize, MIN_CUBE_SIZE, MAX_CUBE_SIZE));
         });
     }
 }

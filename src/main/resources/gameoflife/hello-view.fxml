@@ -12,9 +12,7 @@
         <GameCanvas fx:id="gameCanvas" VBox.vgrow="ALWAYS"/>
     </Pane>
     <HBox alignment="CENTER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" minHeight="50" style="-fx-spacing: 20">
-        <Button mnemonicParsing="false" onAction="#onButtonRun" text="▶" style="-fx-pref-height: 35px;
-    -fx-pref-width: 50px; -fx-font-size: 20"/>
-        <Button mnemonicParsing="false" onAction="#onButtonPause" text="⏸" style="-fx-pref-height: 35px;
+        <Button fx:id="playButton" mnemonicParsing="false" onAction="#onButtonRun" text="▶" style="-fx-pref-height: 35px;
     -fx-pref-width: 50px; -fx-font-size: 20"/>
         <Button mnemonicParsing="false" onAction="#onButtonReset" text="🔄" style="-fx-pref-height: 35px;
     -fx-pref-width: 50px; -fx-font-size: 20"/>
