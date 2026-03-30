@@ -66,7 +66,7 @@ public class Controller {
     @FXML
     void onButtonImport() {
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("src\\main\\resources\\gameoflife"));
+        chooser.setInitialDirectory(new File("."));
         File file = chooser.showOpenDialog(gameCanvas.getScene().getWindow());
         if (file != null && file.getName().endsWith(".rle")){
             Configuration res = RLE_Reader.importConfigurationFromFile(file.getName());
