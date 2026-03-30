@@ -8,14 +8,14 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class GameOfLifeEditor extends Application {
+public class GameOfLifeViewer extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("hello-view.fxml")));
 
         Scene scene = new Scene(root);
-        stage.setTitle("Game Of Life Editor");
+        stage.setTitle("Game Of Life Viewer");
         stage.setScene(scene);
         stage.setResizable(true);
         stage.setMinWidth(500);

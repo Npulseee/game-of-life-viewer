@@ -4,9 +4,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import gameoflife.GameCanvas?>
-<?import gameoflife.ModeButton?>
-
 <?import javafx.scene.layout.Pane?>
+
 <VBox alignment="CENTER" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="gameoflife.Controller">
     <Pane VBox.vgrow="ALWAYS" prefHeight="400" prefWidth="700">
@@ -23,7 +22,8 @@
     -fx-pref-width: 50px; -fx-font-size: 20"/>
         <Button mnemonicParsing="false" onAction="#onButtonClear" text="🗑" style="-fx-pref-height: 35px;
     -fx-pref-width: 50px; -fx-font-size: 20"/>
-        <ModeButton fx:id="modeButton" style="-fx-pref-height: 35px; -fx-pref-width: 50px; -fx-font-size: 20"/>
+        <Button fx:id="modeButton" mnemonicParsing="false" onAction="#onButtonMode" text="🖊" style="-fx-pref-height: 35px;
+    -fx-pref-width: 50px; -fx-font-size: 20"/>
         <Button mnemonicParsing="false" onAction="#onButtonImport" text="⏫" style="-fx-pref-height: 35px;
     -fx-pref-width: 50px; -fx-font-size: 20"/>
     </HBox>

@@ -2,6 +2,7 @@ package gameoflife;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
@@ -11,34 +12,39 @@ import java.io.File;
 
 public class Controller {
 
+    private enum GUIMode {
+        EDIT, VIEW
+    }
+
     @FXML
     private GameCanvas gameCanvas;
     @FXML
-    private ModeButton modeButton;
+    private Button modeButton;
+
+    private GUIMode mode = GUIMode.VIEW;
     private AnimationTimer timer;
-    private int lastX, lastY;
-    private int startX, startY;
-    Grid game;
+    private GameGrid gameGrid;
     private int canvasSizeX;
     private int canvasSizeY;
+    private int lastX, lastY;
+    private int startX, startY;
     private Configuration savedConfiguration;
 
     private boolean isPaused = true;
 
     public void initialize() {
+        canvasSizeX = 100;
+        canvasSizeY = 100;
+        gameGrid = new GameGrid(canvasSizeX, canvasSizeY);
+
         Pane parent = (Pane) gameCanvas.getParent();
         gameCanvas.widthProperty().bind(parent.widthProperty());
         gameCanvas.heightProperty().bind(parent.heightProperty());
-
-        float initSize = 10;
-        gameCanvas.setCubeSize(initSize);
+        gameCanvas.setGame(gameGrid);
+        gameCanvas.setCubeSize(10);
         gameCanvas.getGraphicsContext2D().setLineWidth(.1);
 
-        canvasSizeX = 100;
-        canvasSizeY = 100;
-        game = new Grid(canvasSizeX, canvasSizeY);
-        gameCanvas.setGame(game);
-        savedConfiguration = game.getCurrentConfiguration();
+        savedConfiguration = gameGrid.getCurrentConfiguration();
         addEventHandlerToGameGrid();
         startFreshTimer();
     }
@@ -50,13 +56,13 @@ public class Controller {
 
     @FXML
     void onButtonReset() {
-        game.loadConfigurationCentered(savedConfiguration);
-        gameCanvas.setGame(game);
+        gameGrid.loadConfigurationCentered(savedConfiguration);
+        gameCanvas.setGame(gameGrid);
     }
 
     @FXML
     void onButtonClear() {
-        game.clear();
+        gameGrid.clear();
     }
 
     @FXML
@@ -65,16 +71,16 @@ public class Controller {
         chooser.setInitialDirectory(new File("src\\main\\resources\\gameoflife"));
         File file = chooser.showOpenDialog(gameCanvas.getScene().getWindow());
         if (file != null && file.getName().endsWith(".rle")){
-            Configuration res = RLE_Reader.readFile(file.getName());
-            game.loadConfigurationCentered(res);
-            savedConfiguration = game.getCurrentConfiguration();
+            Configuration res = RLE_Reader.importConfigurationFromFile(file.getName());
+            gameGrid.loadConfigurationCentered(res);
+            savedConfiguration = gameGrid.getCurrentConfiguration();
             gameCanvas.updateCanvasPosition();
         }
     }
 
     @FXML
     void onButtonSave() {
-        savedConfiguration = game.getCurrentConfiguration();
+        savedConfiguration = gameGrid.getCurrentConfiguration();
     }
 
     @FXML
@@ -82,6 +88,11 @@ public class Controller {
         isPaused = true;
     }
 
+    @FXML
+    void onButtonMode() {
+        mode = mode == GUIMode.VIEW ? GUIMode.EDIT : GUIMode.VIEW;
+        modeButton.setText(mode == GUIMode.EDIT ? "👀" : "\uD83D\uDD8A");
+    }
 
     private void startFreshTimer() {
         if (timer != null) {
@@ -94,7 +105,7 @@ public class Controller {
             public void handle(long now) {
                 if (now - lastUpdate >= 62500000) {
                     if (!isPaused) {
-                        game.calculateNextGeneration();
+                        gameGrid.calculateNextGeneration();
                     }
                     gameCanvas.drawGrid();
                     lastUpdate = now;
@@ -107,13 +118,13 @@ public class Controller {
     private void addEventHandlerToGameGrid() {
 
         gameCanvas.addEventHandler(MouseEvent.MOUSE_PRESSED, (MouseEvent event) -> {
-            if (modeButton.getActiveMode() == GUIMode.VIEW) {
+            if (mode == GUIMode.VIEW) {
                 startX = (int) (event.getSceneX() / gameCanvas.getCubeSize());
                 startY = (int) (event.getSceneY() / gameCanvas.getCubeSize());
             }
         });
         gameCanvas.addEventHandler(MouseEvent.MOUSE_RELEASED, (MouseEvent event) -> {
-            if (modeButton.getActiveMode() == GUIMode.VIEW) {
+            if (mode == GUIMode.VIEW) {
                 gameCanvas.setTotals();
             }
         });
@@ -121,11 +132,11 @@ public class Controller {
             int x = (int) (event.getSceneX() / gameCanvas.getCubeSize());
             int y = (int) (event.getSceneY() / gameCanvas.getCubeSize());
             if ((lastX != x || lastY != y) && x >= 0 && x < canvasSizeX - 1 && y >= 0 && y < canvasSizeY - 1) {
-                if (modeButton.getActiveMode() == GUIMode.EDIT) {
+                if (mode == GUIMode.EDIT) {
                     lastX = x;
                     lastY = y;
-                    game.setValueAt(x, y, event.isPrimaryButtonDown());
-                } else if (modeButton.getActiveMode() == GUIMode.VIEW) {
+                    gameGrid.setCell(x, y, event.isPrimaryButtonDown());
+                } else {
                     gameCanvas.addToOffsetX(startX - x);
                     gameCanvas.addToOffsetY(startY - y);
                 }
@@ -145,9 +156,5 @@ public class Controller {
                 System.out.println(gameCanvas.getCubeSize());
             }
         });
-    }
-
-    public enum GUIMode {
-        EDIT, VIEW
     }
 }
