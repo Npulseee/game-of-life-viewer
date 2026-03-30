@@ -1,85 +1,71 @@
-package com.example.gameoflife;
-
-import java.util.Random;
+package gameoflife;
 
 public class Grid {
 
     private int width, height;
-    private int[][] values;
+    private boolean[][] is_alive_table;
+    private int[] birth;
+    private int[] survive;
 
 
     public Grid(int sizeX, int sizeY) {
         this.width = sizeX;
         this.height = sizeY;
-        values = new int[sizeX][sizeY];
+        is_alive_table = new boolean[sizeX][sizeY];
     }
 
 
-    public void loadConfigurationCentered(int[][] config) {
-        int sizeX = config.length;
-        int sizeY = config[0].length;
+    public void loadConfigurationCentered(Configuration config) {
 
         // increase grid dimensions if the new pattern is larger
-        if (width < sizeX || height < sizeY) {
-            width = sizeX;
-            height = sizeY;
+        if (width < config.width() || height < config.height()) {
+            width = config.width() + 10;
+            height = config.height() + 10;
         }
+        birth = config.birth();
+        survive = config.survive();
+        is_alive_table = new boolean[width][height];
 
-        values = new int[width][height];
-        int startX = width / 2 - sizeX / 2;
-        int startY = height / 2 - sizeY / 2;
-        for (int x = 0; x < sizeX; x++) {
-            System.arraycopy(config[x], 0, values[startX + x], startY, sizeY);
-        }
-    }
-
-
-    public void fillWithRandomValues() {
-        values = new int[width][height];
-        Random rand = new Random();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                values[x][y] = rand.nextInt(2);
-            }
+        int startX = width / 2 - config.width() / 2;
+        int startY = height / 2 - config.height() / 2;
+        for (int x = 0; x < config.width(); x++) {
+            System.arraycopy(config.pattern()[x], 0, is_alive_table[startX + x], startY, config.height());
         }
     }
 
 
-    public int[][] getValues() {
-        return values;
+    public boolean[][] getValues() {
+        return is_alive_table;
     }
 
 
     public void clear() {
-        values = new int[width][height];
+        is_alive_table = new boolean[width][height];
     }
 
 
-    public void setValueAt(int x, int y, int value) {
-        values[x][y] = value;
+    public void setValueAt(int x, int y, boolean value) {
+        is_alive_table[x][y] = value;
     }
 
 
     public void calculateNextGeneration() {
-        int[][] result = new int[width][height];
+        boolean[][] result = new boolean[width][height];
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 result[x][y] = determineFateForCell(x, y);
             }
         }
-        values = result;
+        is_alive_table = result;
     }
 
 
-    private int determineFateForCell(int posX, int posY) {
+    private boolean determineFateForCell(int posX, int posY) {
         int count = getNumberOfAliveNeighbours(posX, posY);
-        if (values[posX][posY] == 0 && count == 3) {
-            return 1;
+        if (!is_alive_table[posX][posY] && count == 3) {
+            return true;
         }
-        if (values[posX][posY] == 1 && (count == 2 || count == 3)) {
-            return 1;
-        }
-        return 0;
+        return is_alive_table[posX][posY] && (count == 2 || count == 3);
     }
 
 
@@ -89,7 +75,7 @@ public class Grid {
             if (x >= 0 && x < width) {
                 for (int y = posY - 1; y <= posY + 1; y++) {
                     if (y >= 0 && y < height && (x != posX || y != posY)) {
-                        sum += values[x][y];
+                        sum += is_alive_table[x][y] ? 1 : 0;
                     }
                 }
             }
@@ -98,7 +84,8 @@ public class Grid {
     }
 
 
-    public int[][] getCurrentConfiguration() {
+
+    public Configuration getCurrentConfiguration() {
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
         int maxX = Integer.MIN_VALUE;
@@ -108,7 +95,7 @@ public class Grid {
 
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if (values[x][y] == 1) {
+                if (is_alive_table[x][y]) {
                     minY = Math.min(y, minY);
                     minX = minX == Integer.MAX_VALUE ? x : minX;
                     maxY = Math.max(y, maxY);
@@ -119,18 +106,18 @@ public class Grid {
         }
 
         if (isEmpty){
-            return new int[1][0];
+            return null;
         }
 
         int sizeX = maxX - minX + 1;
         int sizeY = maxY - minY + 1;
 
-        int[][] result = new int[sizeX][sizeY];
+        boolean[][] result = new boolean[sizeX][sizeY];
 
         for (int x = 0; x < sizeX ; x++) {
-            System.arraycopy(values[minX + x], minY, result[x], 0, sizeY);
+            System.arraycopy(is_alive_table[minX + x], minY, result[x], 0, sizeY);
         }
 
-        return result;
+        return new Configuration(sizeX, sizeY, survive, birth, result);
     }
 }

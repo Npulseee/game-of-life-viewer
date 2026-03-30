@@ -1,9 +1,7 @@
-package com.example.gameoflife;
+package gameoflife;
 
-import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
 
 public class GameCanvas extends Canvas {
 
@@ -14,7 +12,7 @@ public class GameCanvas extends Canvas {
 
 
     public void drawGrid() {
-        int[][] grid = game.getValues();
+        boolean[][] grid = game.getValues();
         GraphicsContext gc = getGraphicsContext2D();
         gc.clearRect(0, 0, getWidth(), getHeight());
         int cubeCountX = Math.min((int) (getWidth() / cubeSize), grid.length);
@@ -24,13 +22,13 @@ public class GameCanvas extends Canvas {
         for (int x = 0; x < cubeCountX; x++) {
             for (int y = 0; y < cubeCountY; y++) {
                 try {
-                    if (x >= grid.length || y >= grid[0].length || x < 0 || y < 0) {
+                    if (x >= grid.length || y >= grid[0].length) {
                         continue;
                     }
-                    if (grid[x][y] == 0) {
-                        gc.strokeRect(startX + x * cubeSize, startY + y * cubeSize, cubeSize, cubeSize);//draws the empty cubes
+                    if (grid[x][y]) {
+                        gc.fillRect(startX + x * cubeSize, startY + y * cubeSize, cubeSize, cubeSize);
                     } else {
-                        gc.fillRect(startX + x * cubeSize, startY + y * cubeSize, cubeSize, cubeSize);//draws the black cubes
+                        gc.strokeRect(startX + x * cubeSize, startY + y * cubeSize, cubeSize, cubeSize);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     e.printStackTrace();

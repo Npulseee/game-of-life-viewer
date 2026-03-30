@@ -1,4 +1,4 @@
-package com.example.gameoflife;
+package gameoflife;
 
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
@@ -21,7 +21,7 @@ public class Controller {
     Grid game;
     private int canvasSizeX;
     private int canvasSizeY;
-    private int[][] savedConfiguration;
+    private Configuration savedConfiguration;
 
     private boolean isPaused = true;
 
@@ -38,7 +38,6 @@ public class Controller {
         canvasSizeY = 100;
         game = new Grid(canvasSizeX, canvasSizeY);
         gameCanvas.setGame(game);
-        game.fillWithRandomValues();
         savedConfiguration = game.getCurrentConfiguration();
         addEventHandlerToGameGrid();
         startFreshTimer();
@@ -63,10 +62,10 @@ public class Controller {
     @FXML
     void onButtonImport() {
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("src\\main\\resources\\com\\example\\gameoflife"));
+        chooser.setInitialDirectory(new File("src\\main\\resources\\gameoflife"));
         File file = chooser.showOpenDialog(gameCanvas.getScene().getWindow());
         if (file != null && file.getName().endsWith(".rle")){
-            int[][] res = RLE_Encoder.importFile(file.getName());
+            Configuration res = RLE_Reader.readFile(file.getName());
             game.loadConfigurationCentered(res);
             savedConfiguration = game.getCurrentConfiguration();
             gameCanvas.updateCanvasPosition();
@@ -125,7 +124,7 @@ public class Controller {
                 if (modeButton.getActiveMode() == GUIMode.EDIT) {
                     lastX = x;
                     lastY = y;
-                    drawOverCell(x, y, event);
+                    game.setValueAt(x, y, event.isPrimaryButtonDown());
                 } else if (modeButton.getActiveMode() == GUIMode.VIEW) {
                     gameCanvas.addToOffsetX(startX - x);
                     gameCanvas.addToOffsetY(startY - y);
@@ -146,10 +145,6 @@ public class Controller {
                 System.out.println(gameCanvas.getCubeSize());
             }
         });
-    }
-
-    private void drawOverCell(int x, int y, MouseEvent event) {
-        game.setValueAt(x, y, event.isPrimaryButtonDown() ? 1 : 0);
     }
 
     public enum GUIMode {

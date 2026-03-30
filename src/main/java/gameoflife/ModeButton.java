@@ -1,4 +1,4 @@
-package com.example.gameoflife;
+package gameoflife;
 
 import javafx.scene.control.Button;
 
