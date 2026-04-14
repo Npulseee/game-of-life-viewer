@@ -19,3 +19,8 @@ they evolve over time, by following the common [rules](https://conwaylife.com/wi
 - save the current pattern
 - reset the game to the last saved pattern
 - clear the game grid
+
+## Usage Example
+<p align="center">
+  <img src="https://github.com/Npulseee/game-of-life-viewer/blob/master/assets/Recording-GOL.gif" width="90%">
+</p>
